@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Tasklist Details{% endblock %}</h1>
+  <a class="action" href="{{ url_for('task.create', tasklist_id=tasklist['id']) }}">Adicionar Nova Tarefa</a>
+{% endblock %}
+
+{% block content %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{ tasklist['title'] }}</h1>
+          <p class="body">{{ tasklist['body'] }}</p>
+          <div class="about">On {{ tasklist['created'].strftime('%Y-%m-%d') }}</div>
+          <h1>Tarefas nesta lista:</h1>
+            {% if tasks %}
+                <ul>
+                    {% for task in tasks %}
+                        <li>
+                            <p class="body">Tarefa: {{ task['body'] }}</p>
+                        </li>
+                        <li>
+                            <p class="body">Data: {{task['created']}}</p>
+                        </li>
+                        <li>
+                            <p class="body">{% if task['completed'] %}Completa{% else %}Pendente{% endif %}</p>
+                            <form action="{{ url_for('task.toggle_complete', id=task['id']) }}" method="post" class="toggle-form">
+                              <input type="submit" value="Alterar Status" class="button-toggle">
+                            </form>
+                        </li>
+                        <li>
+                            <form action="{{ url_for('task.delete', id=task['id']) }}" method="post" class="delete-form">
+                                <input type="submit" value="Excluir" onclick="return confirm('Tem certeza que deseja deletar esta tarefa?');">
+                            </form>
+                        </li>
+                        {% if not loop.last %}
+                        <hr>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+      </header>
+    </article>
+
+{% endblock %}
+
+
+
+

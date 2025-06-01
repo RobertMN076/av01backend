@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Tasklists{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('tasklist.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for tasklist in tasklists %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{ tasklist['title'] }}</h1>
+          <div class="about">On {{ tasklist['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == tasklist['author_id'] %}
+          <a class="action" href="{{ url_for('tasklist.update', id=tasklist['id']) }}">Edit</a>
+          <a class="action" href="{{ url_for('tasklist.detail', id=tasklist['id'] ) }}">Detalhes</a>
+        {% endif %}
+      </header>
+      <p class="body">{{ tasklist['body'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
