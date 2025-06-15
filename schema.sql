@@ -1,27 +1,27 @@
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS tasklist;
-DROP TABLE IF EXISTS task;
+DROP TABLE IF EXISTS task;       -- Drop 'task' first, as it depends on 'tasklist'
+DROP TABLE IF EXISTS tasklist;   -- Drop 'tasklist' next, as it depends on 'user'
+DROP TABLE IF EXISTS user;       -- Drop 'user' last
 
 CREATE TABLE user (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tasklist (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  author_id INTEGER NOT NULL,
-  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  title TEXT NOT NULL,
-  body TEXT NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES user (id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    author_id INT NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    title VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES user (id) ON DELETE CASCADE
 );
 
 CREATE TABLE task (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tasklist_id INTEGER NOT NULL,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    tasklist_id INT NOT NULL,
     body TEXT NOT NULL,
-    completed BOOLEAN NOT NULL DEFAULT 0,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (tasklist_id) REFERENCES tasklist(id)
+    completed BOOLEAN NOT NULL DEFAULT FALSE, -- MySQL uses TRUE/FALSE or 0/1 for BOOLEAN
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tasklist_id) REFERENCES tasklist(id) ON DELETE CASCADE
 );
